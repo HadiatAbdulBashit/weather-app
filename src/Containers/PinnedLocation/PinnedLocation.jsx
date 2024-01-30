@@ -18,11 +18,11 @@ const PinnedLocation = () => {
     try {
       let savedLocation = JSON.parse(localStorage.getItem("location")) || [];
       // API key default ini adalalh key personal yang hanya aktif sampai 12/Feb/2024, gunakan env variable untuk menggunakan env sendiri dengan menggunakan contoh .env.example
-      const apiKey = process.env.API_KEY || "0cf0fea2677b42f899690517242901"; 
+      const apiKey = process.env.API_KEY || "0cf0fea2677b42f899690517242901";
 
       const weatherPromises = savedLocation.map(async (location) => {
         try {
-          const forecastUrl = `/v1/current.json?key=${apiKey}&q=${location}`;
+          const forecastUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
           const response = await axios.get(forecastUrl);
           return response.data; // You can modify this line as needed
         } catch (error) {
@@ -104,7 +104,9 @@ const PinnedLocation = () => {
           style={{ minHeight: "80vh" }}
         >
           <h1>No saved location</h1>
-          <p>Pin location on <Link to={'/'}>Home Page</Link></p>
+          <p>
+            Pin location on <Link to={"/"}>Home Page</Link>
+          </p>
         </div>
       ) : (
         <div className="my-3 g-3 row row-cols-1 row-cols-xl-2 justify-content-center">
