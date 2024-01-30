@@ -19,6 +19,7 @@ const Home = () => {
   const [forecast, setForecast] = useState([]);
   const [location, setLocation] = useState({});
   const [onCelcius, setOnCelcius] = useState(true);
+  const [isPinLocation, setIsPinLocation] = useState("");
 
   const getWeather = () => {
     // Link API dari weatherapi untuk menampilkan data
@@ -37,14 +38,36 @@ const Home = () => {
       .catch((error) => console.error("Error fetching forecast:", error));
   };
 
-  const pinLocation = () => {
-    const location = JSON.parse(localStorage.getItem('location')) || []
-    location.push(selectedPlace.value);
-    localStorage.setItem('location', JSON.stringify(location))
+  const clickPinLocation = () => {
+    let savedLocation = JSON.parse(localStorage.getItem("location")) || [];
+    const locationName =
+      `${location.name} ${location.region} ${location.country}`.replaceAll(
+        " ",
+        "-"
+      );
+    if (savedLocation.includes(locationName)) {
+      savedLocation = savedLocation.filter(e => e !== locationName)
+      setIsPinLocation(true);
+    } else {
+      savedLocation.push(locationName);
+      setIsPinLocation(false);
+    }
+    localStorage.setItem("location", JSON.stringify(savedLocation));
   };
 
   useEffect(() => {
     getWeather();
+    const savedLocation = JSON.parse(localStorage.getItem("location")) || [];
+    const locationName =
+      `${location.name} ${location.region} ${location.country}`.replaceAll(
+        " ",
+        "-"
+      );
+    if (savedLocation.includes(locationName)) {
+      setIsPinLocation(true);
+    } else {
+      setIsPinLocation(false);
+    }
   }, [selectedPlace]);
 
   return (
@@ -53,9 +76,12 @@ const Home = () => {
         <div className="d-flex justify-content-between">
           <div className="d-flex gap-3">
             <h1>{`${location.name} - ${location.region}, ${location.country}`}</h1>
-            <button className="btn" onClick={() => pinLocation()}>
-              {<BsPinAngleFill style={{ width: "30px", height: "100%" }} />}
-              <BsPinAngle style={{ width: "30px", height: "100%" }} />
+            <button className="btn" onClick={() => clickPinLocation()}>
+              {isPinLocation ? (
+                <BsPinAngle style={{ width: "30px", height: "100%" }} />
+              ) : (
+                <BsPinAngleFill style={{ width: "30px", height: "100%" }} />
+              )}
             </button>
           </div>
           <div className="btn-group" style={{ height: "50px" }} role="group">

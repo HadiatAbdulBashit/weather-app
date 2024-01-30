@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Select from "react-select";
 import LocationContext from "../../Contexts/LocationContext";
@@ -16,14 +16,10 @@ const Navbar = () => {
         }&key=${apiKey}`
       );
 
-      console.log(response);
-
       const formattedOptions = response.data.map((location) => ({
         value: location.url,
         label: `${location.name} - ${location.region}, ${location.country}`,
       }));
-
-      console.log(formattedOptions);
 
       setOptionSelect(formattedOptions);
     } catch (error) {
@@ -39,6 +35,10 @@ const Navbar = () => {
   const handleInputChange = (inputValueSearchSelect) => {
     promiseOptions(inputValueSearchSelect ?? "auto:ip");
   };
+
+  useEffect(() => {
+    promiseOptions();
+  }, []);
 
   return (
     <nav
