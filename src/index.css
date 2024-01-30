@@ -16,6 +16,10 @@ body {
   background-color: #ffffff30;
 }
 
+.card:hover {
+  background-color: #ffffff50;
+}
+
 .search-navbar {
   width: 200px;
 }

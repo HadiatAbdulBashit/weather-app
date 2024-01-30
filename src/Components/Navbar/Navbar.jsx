@@ -1,11 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
+import axios from "axios";
+
 import LocationContext from "../../Contexts/LocationContext";
 
 const Navbar = () => {
   const { selectedPlace, setSelectedPlace } = useContext(LocationContext);
   const [optionSelect, setOptionSelect] = useState([]);
+  const navigate = useNavigate();
 
   const promiseOptions = async (searchKey) => {
     try {
@@ -30,6 +33,7 @@ const Navbar = () => {
 
   const handleChange = (selectedOption) => {
     setSelectedPlace(selectedOption);
+    navigate("/");
   };
 
   const handleInputChange = (inputValueSearchSelect) => {
@@ -49,9 +53,23 @@ const Navbar = () => {
       }}
     >
       <div className="container-md">
-        <a className="navbar-brand fw-bold" href="/">
+        <Link className="navbar-brand fw-bold" to={"/"}>
           Weather App
-        </a>
+        </Link>
+        <div className="navbar-collapse collapse" id="navbar">
+          <ul className="navbar-nav ms-auto me-3">
+            <li className="nav-item">
+              <Link className="nav-link" to={"/"}>
+                Home
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to={"/pin"}>
+                Pin
+              </Link>
+            </li>
+          </ul>
+        </div>
         <div className="d-flex gap-2">
           <Select
             value={selectedPlace}
@@ -72,20 +90,6 @@ const Navbar = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-        </div>
-        <div className="navbar-collapse collapse" id="navbar">
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#">
-                Home
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                Pin
-              </a>
-            </li>
-          </ul>
         </div>
       </div>
     </nav>
