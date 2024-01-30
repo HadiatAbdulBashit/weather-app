@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import axios from "axios";
 
@@ -8,12 +8,14 @@ import LocationContext from "../../Contexts/LocationContext";
 const Navbar = () => {
   const { selectedPlace, setSelectedPlace } = useContext(LocationContext);
   const [optionSelect, setOptionSelect] = useState([]);
+  const [url, setUrl] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const promiseOptions = async (searchKey) => {
     try {
       // API key default ini adalalh key personal yang hanya aktif sampai 12/Feb/2024, gunakan env variable untuk menggunakan env sendiri dengan menggunakan contoh .env.example
-      const apiKey = process.env.API_KEY || "0cf0fea2677b42f899690517242901"; 
+      const apiKey = process.env.API_KEY || "0cf0fea2677b42f899690517242901";
       const response = await axios.get(
         `http://api.weatherapi.com/v1/search.json?q=${
           searchKey ? searchKey : "auto:ip"
@@ -45,6 +47,10 @@ const Navbar = () => {
     promiseOptions();
   }, []);
 
+  useEffect(() => {
+    setUrl(location.pathname);
+  }, [location]);
+
   return (
     <nav
       className="navbar navbar-expand-md"
@@ -57,20 +63,6 @@ const Navbar = () => {
         <Link className="navbar-brand fw-bold" to={"/"}>
           Weather App
         </Link>
-        <div className="navbar-collapse collapse" id="navbar">
-          <ul className="navbar-nav ms-auto me-3">
-            <li className="nav-item">
-              <Link className="nav-link" to={"/"}>
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to={"/pin"}>
-                Pin
-              </Link>
-            </li>
-          </ul>
-        </div>
         <div className="d-flex gap-2">
           <Select
             value={selectedPlace}
@@ -91,6 +83,26 @@ const Navbar = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
+        </div>
+        <div className="navbar-collapse collapse" id="navbar">
+          <ul className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <Link
+                className={"nav-link" + (url === "/" ? " active" : "")}
+                to={"/"}
+              >
+                Home
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className={"nav-link" + (url === "/pin" ? " active" : "")}
+                to={"/pin"}
+              >
+                Pin
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
