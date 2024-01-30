@@ -1,6 +1,8 @@
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
+
 import Navbar from "../../Components/Navbar";
+import Footer from "../../Components/Footer";
 
 import LocationContext from '../../Contexts/LocationContext';
 
@@ -11,6 +13,7 @@ const Root = () => {
     <LocationContext.Provider value={{ selectedPlace, setSelectedPlace }}>
       <Navbar />
       <Outlet />
+      <Footer />
     </LocationContext.Provider>
   );
 };
