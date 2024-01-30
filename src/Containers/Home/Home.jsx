@@ -35,8 +35,10 @@ const Home = () => {
       setCurrentWeather(response.data.current);
       setLocation(response.data.location);
       isPin(response.data.location);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+      setCurrentWeather(null);
       console.error("Error fetching forecast:", error);
     }
   };
@@ -72,14 +74,17 @@ const Home = () => {
   };
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     getWeather();
   }, [selectedPlace]);
 
   return (
     <div className="container my-3">
       {loading ? (
-        <div className="d-flex align-items-center justify-content-center" style={{minHeight: '80vh'}}>
+        <div
+          className="d-flex align-items-center justify-content-center"
+          style={{ minHeight: "80vh" }}
+        >
           <div
             className="spinner-border"
             style={{ width: "100px", height: "100px" }}
@@ -87,6 +92,13 @@ const Home = () => {
           >
             <span className="visually-hidden">Loading...</span>
           </div>
+        </div>
+      ) : currentWeather === null ? (
+        <div
+          className="d-flex align-items-center justify-content-center"
+          style={{ minHeight: "80vh" }}
+        >
+          <h1>Failed to connect to server</h1>
         </div>
       ) : (
         <>

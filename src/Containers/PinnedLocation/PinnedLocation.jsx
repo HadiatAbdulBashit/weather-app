@@ -1,9 +1,15 @@
-import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import moment from "moment";
-import { useEffect, useState } from "react";
-import { BsSpeedometer2, BsWind } from "react-icons/bs";
+import axios from "axios";
+
+import { BsSpeedometer2, BsTrash3, BsWind } from "react-icons/bs";
+
+import LocationContext from "../../Contexts/LocationContext";
+import { Link } from "react-router-dom";
 
 const PinnedLocation = () => {
+  const { setSelectedPlace } = useContext(LocationContext);
+
   const [weathers, setWeathers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [onCelcius, setOnCelcius] = useState(true);
@@ -33,7 +39,16 @@ const PinnedLocation = () => {
     }
   };
 
-  console.log(weathers);
+  const cardClick = (valueLocation, labelLocation) => {
+    setSelectedPlace({ value: valueLocation, label: labelLocation });
+  };
+
+  const clickDeleteLocation = (location) => {
+    let savedLocation = JSON.parse(localStorage.getItem("location")) || [];
+    savedLocation = savedLocation.filter((e) => e !== location);
+    localStorage.setItem("location", JSON.stringify(savedLocation));
+    getWeathers();
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -42,6 +57,33 @@ const PinnedLocation = () => {
 
   return (
     <div className="container my-3">
+      <div className="d-flex justify-content-between gap-3">
+        <h1>Pinned Location</h1>
+        <div
+          className="btn-group"
+          style={{ height: "50px", zIndex: 0 }}
+          role="group"
+        >
+          <button
+            type="button"
+            className={
+              "btn btn-outline-secondary" + (onCelcius ? " active" : "")
+            }
+            onClick={() => setOnCelcius(true)}
+          >
+            C°
+          </button>
+          <button
+            type="button"
+            className={
+              "btn btn-outline-secondary" + (onCelcius ? "" : " active")
+            }
+            onClick={() => setOnCelcius(false)}
+          >
+            F°
+          </button>
+        </div>
+      </div>
       {loading ? (
         <div
           className="d-flex align-items-center justify-content-center"
@@ -56,12 +98,30 @@ const PinnedLocation = () => {
           </div>
         </div>
       ) : weathers.length === 0 ? (
-        <h1>No data</h1>
+        <div
+          className="d-flex align-items-center justify-content-center flex-column"
+          style={{ minHeight: "80vh" }}
+        >
+          <h1>No saved location</h1>
+          <p>Pin location on <Link to={'/'}>Home Page</Link></p>
+        </div>
       ) : (
         <div className="my-3 g-3 row row-cols-1 row-cols-xl-2 justify-content-center">
           {weathers.map((location, index) => (
             <div className="col" key={index}>
-              <div className="card">
+              <div
+                className="card"
+                onClick={() =>
+                  cardClick(
+                    `${location.location?.name} ${location.location?.region} ${location.location?.country}`.replaceAll(
+                      " ",
+                      "-"
+                    ),
+                    `${location.location?.name} - ${location.location?.region}, ${location.location?.country}`
+                  )
+                }
+                style={{ cursor: "pointer" }}
+              >
                 <div className="row g-0">
                   <div className="col-md-4" style={{ position: "relative" }}>
                     <img
@@ -86,22 +146,38 @@ const PinnedLocation = () => {
                   </div>
                   <div className="col-md-8">
                     <div className="card-body">
-                      <div>
+                      <div className="d-flex justify-content-between align-items-center">
                         <h5 className="card-title">{`${location.location?.name} - ${location.location?.region}, ${location.location?.country}`}</h5>
+                        <button
+                          className="btn"
+                          onClick={() =>
+                            clickDeleteLocation(
+                              `${location.location?.name} ${location.location?.region} ${location.location?.country}`.replaceAll(
+                                " ",
+                                "-"
+                              )
+                            )
+                          }
+                        >
+                          <BsTrash3
+                            style={{
+                              width: "20px",
+                              height: "100%",
+                              zIndex: 20,
+                            }}
+                          />
+                        </button>
                       </div>
                       <div className="fs-5 d-flex gap-3">
                         <span>
                           <BsSpeedometer2 className="me-1" />
-                          {onCelcius
-                            ? location.current?.humidity
-                            : location.current?.mintemp_f}
-                          %
+                          {location.current?.humidity}%
                         </span>
                         <span>
                           <BsWind className="me-1" />
                           {onCelcius
                             ? location.current?.wind_kph
-                            : location.current?.maxtemp_f}
+                            : location.current?.wind_mph}
                           <span className="fs-6">
                             {onCelcius ? "Km/h" : "Mp/h"}
                           </span>

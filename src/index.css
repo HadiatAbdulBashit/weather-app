@@ -20,6 +20,10 @@ body {
   background-color: #ffffff50;
 }
 
+.card:active {
+  background-color: #ffffff70;
+}
+
 .search-navbar {
   width: 200px;
 }
