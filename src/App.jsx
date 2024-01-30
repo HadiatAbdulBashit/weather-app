@@ -12,6 +12,7 @@ function App() {
   const [location, setLocation] = useState({});
   const [selectedPlace, setSelectedPlace] = useState({ value: "auto:ip" });
   const [optionSelect, setOptionSelect] = useState([]);
+  const [onCelcius, setOnCelcius] = useState(true);
 
   const promiseOptions = async (searchKey) => {
     try {
@@ -119,16 +120,47 @@ function App() {
       </nav>
       <div className="container my-3">
         <div>
-          <h1>{`${location.name} - ${location.region}, ${location.country}`}</h1>
+          <div className="d-flex justify-content-between">
+            <h1>{`${location.name} - ${location.region}, ${location.country}`}</h1>
+            <div class="btn-group" style={{ height: "50px" }} role="group">
+              <button
+                type="button"
+                class={
+                  "btn btn-outline-secondary" + (onCelcius ? " active" : "")
+                }
+                onClick={() => setOnCelcius(true)}
+              >
+                C°
+              </button>
+              <button
+                type="button"
+                class={
+                  "btn btn-outline-secondary" + (onCelcius ? "" : " active")
+                }
+                onClick={() => setOnCelcius(false)}
+              >
+                F°
+              </button>
+            </div>
+          </div>
           <div className="d-flex align-items-center flex-column">
             <div
               className="d-flex justify-content-center align-items-center"
               style={{ width: "100%" }}
             >
               <div className="d-flex flex-column">
-                <span className="fs-1 fw-bold">{currentWeather.temp_c}°</span>
+                <span className="fs-1 fw-bold">
+                  {onCelcius ? currentWeather.temp_c : currentWeather.temp_f}°
+                </span>
                 <span className="fs-5">
-                  {forecast[0]?.day?.mintemp_c}°/{forecast[0]?.day?.maxtemp_c}°
+                  {onCelcius
+                    ? forecast[0]?.day?.mintemp_c
+                    : forecast[0]?.day?.mintemp_f}
+                  °/
+                  {onCelcius
+                    ? forecast[0]?.day?.maxtemp_c
+                    : forecast[0]?.day?.maxtemp_f}
+                  °
                 </span>
               </div>
               <img
@@ -138,7 +170,11 @@ function App() {
                 style={{ maxWidth: "200px" }}
               />
               <span className="fs-5">
-                RealFell {currentWeather.feelslike_c}°
+                RealFell{" "}
+                {onCelcius
+                  ? currentWeather.feelslike_c
+                  : currentWeather.feelslike_f}
+                °
               </span>
             </div>
             <span className="fs-2 text-capitalize fw-bold">
@@ -150,16 +186,21 @@ function App() {
               <div className="d-flex align-items-center gap-1 flex-column flex-md-row">
                 <BsWind /> Wind
                 <div>
-                  {currentWeather.wind_kph}
-                  <span className="fs-6">Km/h</span> {currentWeather.wind_dir}
+                  {onCelcius
+                    ? currentWeather.wind_kph
+                    : currentWeather.wind_mph}
+                  <span className="fs-6">{onCelcius ? "Km/h" : "Mp/h"}</span>{" "}
+                  {currentWeather.wind_dir}
                 </div>
               </div>
               <div className="d-flex align-items-center gap-1 flex-column flex-md-row">
                 <BsSpeedometer2 />
                 Preassure
                 <div>
-                  {currentWeather.pressure_mb}
-                  <span className="fs-6">mb</span>
+                  {onCelcius
+                    ? currentWeather.pressure_mb
+                    : currentWeather.pressure_in}
+                  <span className="fs-6">{onCelcius ? "mb" : "in"}</span>
                 </div>
               </div>
               <div className="d-flex align-items-center gap-1 flex-column flex-md-row">
@@ -191,8 +232,12 @@ function App() {
                     width={"100px"}
                   />
                   <div className="text-muted d-flex justify-content-center flex-column me-3">
-                    <span>{day.day.maxtemp_c}</span>
-                    <span>{day.day.mintemp_c}</span>
+                    <span>
+                      {onCelcius ? day.day.maxtemp_c : day.day.maxtemp_f}°
+                    </span>
+                    <span>
+                      {onCelcius ? day.day.mintemp_c : day.day.mintemp_f}°
+                    </span>
                   </div>
                 </div>
               </div>
