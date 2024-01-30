@@ -4,6 +4,10 @@ body {
   min-width: 450px;
 }
 
+* {
+  font-weight: 500;
+}
+
 .nav-link.active {
   border-bottom: 2px solid black;
 }

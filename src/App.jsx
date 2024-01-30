@@ -3,6 +3,9 @@ import Select from "react-select";
 import axios from "axios";
 import moment from "moment";
 
+import { BsWind, BsSpeedometer2 } from "react-icons/bs";
+import { RiWaterPercentLine } from "react-icons/ri";
+
 function App() {
   const [currentWeather, setCurrentWeather] = useState({});
   const [forecast, setForecast] = useState([]);
@@ -115,25 +118,61 @@ function App() {
         </div>
       </nav>
       <div className="container my-3">
-        <h1>{`${location.name} - ${location.region}, ${location.country}`}</h1>
-
-        <h2>Today's Weather</h2>
-        <div className="row">
-          <div className="col">
-            <div className="card">
-              <div className="card-body">
-                <div className="card-title">
-                  {currentWeather.condition?.text}
-                </div>
-                <img
-                  src={currentWeather.condition?.icon}
-                  alt={currentWeather.condition?.text}
-                />
+        <div>
+          <h1>{`${location.name} - ${location.region}, ${location.country}`}</h1>
+          <div className="d-flex align-items-center flex-column">
+            <div
+              className="d-flex justify-content-center align-items-center"
+              style={{ width: "100%" }}
+            >
+              <div className="d-flex flex-column">
+                <span className="fs-1 fw-bold">{currentWeather.temp_c}°</span>
+                <span className="fs-5">
+                  {forecast[0]?.day?.mintemp_c}°/{forecast[0]?.day?.maxtemp_c}°
+                </span>
+              </div>
+              <img
+                src={currentWeather.condition?.icon}
+                alt={currentWeather.condition?.text}
+                width={"50%"}
+                style={{ maxWidth: "200px" }}
+              />
+              <span className="fs-5">
+                RealFell {currentWeather.feelslike_c}°
+              </span>
+            </div>
+            <span className="fs-2 text-capitalize fw-bold">
+              {currentWeather.condition?.text}
+            </span>
+          </div>
+          <div className="mt-5 d-flex justify-content-between fs-5">
+            <div className="d-flex gap-3">
+              <div className="d-flex align-items-center gap-1 flex-column flex-md-row">
+                <BsWind /> Wind
                 <div>
-                  Temperature: {currentWeather.temp_c} °C
-                  <br />
-                  Humidity: {currentWeather.humidity}%
+                  {currentWeather.wind_kph}
+                  <span className="fs-6">Km/h</span> {currentWeather.wind_dir}
                 </div>
+              </div>
+              <div className="d-flex align-items-center gap-1 flex-column flex-md-row">
+                <BsSpeedometer2 />
+                Preassure
+                <div>
+                  {currentWeather.pressure_mb}
+                  <span className="fs-6">mb</span>
+                </div>
+              </div>
+              <div className="d-flex align-items-center gap-1 flex-column flex-md-row">
+                <RiWaterPercentLine /> Humidity
+                <div>
+                  {currentWeather.humidity}
+                  <span className="fs-6">%</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div className="d-flex align-items-center gap-1 flex-column flex-md-row">
+                UV<span className="fs-6">index</span> {currentWeather.uv}
               </div>
             </div>
           </div>
@@ -142,23 +181,19 @@ function App() {
           {forecast.slice(1).map((day) => (
             <div className="col" key={day.date}>
               <div className="card text-center">
-                <div className="card-header">
-                {moment(day.date).format("dddd")}
+                <div className="card-header text-uppercase">
+                  {moment(day.date).format("dddd")}
                 </div>
-                <div className="card-body">
+                <div className="card-body d-flex justify-content-center">
                   <img
                     src={currentWeather.condition?.icon}
                     alt={currentWeather.condition?.text}
-                    width={'100px'}
+                    width={"100px"}
                   />
-                </div>
-                <div className="card-footer text-muted d-flex justify-content-between">
-                  <span>
-                    Max {day.day.maxtemp_c} °C
-                  </span>
-                  <span>
-                    Min {day.day.mintemp_c} °C
-                  </span>
+                  <div className="text-muted d-flex justify-content-center flex-column me-3">
+                    <span>{day.day.maxtemp_c}</span>
+                    <span>{day.day.mintemp_c}</span>
+                  </div>
                 </div>
               </div>
             </div>
