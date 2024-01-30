@@ -1,14 +1,14 @@
 # Weather App with React + Vite
 <br />
 <p align="center">
-  <a href="https://yokjalan.netlify.app/">
+  <a href="https://weather-app-072db1.netlify.app/">
     <img src="https://github.com/HadiatAbdulBashit/weather-app/blob/main/public/icon.svg?raw=true" alt="Logo" width=120 height=120>
   </a>
 
   <h3 align="center">Weather App</h3>
 
   <p align="center">
-    Aplikasi ini dapat diakses <a href="https://">di sini</a>
+    Aplikasi ini dapat diakses <a href="https://weather-app-072db1.netlify.app/">di sini</a>
   </p>
 </p>
 
