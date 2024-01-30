@@ -21,21 +21,22 @@ const Home = () => {
   const [onCelcius, setOnCelcius] = useState(true);
   const [isPinLocation, setIsPinLocation] = useState("");
 
-  const getWeather = () => {
-    // Link API dari weatherapi untuk menampilkan data
-    const apiKey = "0cf0fea2677b42f899690517242901"; // API key
-    const forecastUrl = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${selectedPlace.value}&days=6`;
+  const getWeather = async () => {
+    try {
+      // Link API dari weatherapi untuk menampilkan data
+      const apiKey = "0cf0fea2677b42f899690517242901"; // API key
+      const forecastUrl = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${selectedPlace.value}&days=6`;
 
-    // Mengambil data ramalan cuaca saat ini dan 5 hari ke depan
-    axios
-      .get(forecastUrl)
-      .then((response) => {
-        setForecast(response.data.forecast.forecastday);
-        setCurrentWeather(response.data.current);
-        setLocation(response.data.location);
-        // console.log(response.data);
-      })
-      .catch((error) => console.error("Error fetching forecast:", error));
+      // Mengambil data ramalan cuaca saat ini dan 5 hari ke depan
+      const response = await axios.get(forecastUrl);
+
+      setForecast(response.data.forecast.forecastday);
+      setCurrentWeather(response.data.current);
+      setLocation(response.data.location);
+      isPin(response.data.location);
+    } catch (error) {
+      console.error("Error fetching forecast:", error);
+    }
   };
 
   const clickPinLocation = () => {
@@ -46,17 +47,15 @@ const Home = () => {
         "-"
       );
     if (savedLocation.includes(locationName)) {
-      savedLocation = savedLocation.filter(e => e !== locationName)
-      setIsPinLocation(true);
+      savedLocation = savedLocation.filter((e) => e !== locationName);
     } else {
       savedLocation.push(locationName);
-      setIsPinLocation(false);
     }
     localStorage.setItem("location", JSON.stringify(savedLocation));
+    isPin(location);
   };
 
-  useEffect(() => {
-    getWeather();
+  const isPin = (location) => {
     const savedLocation = JSON.parse(localStorage.getItem("location")) || [];
     const locationName =
       `${location.name} ${location.region} ${location.country}`.replaceAll(
@@ -68,19 +67,23 @@ const Home = () => {
     } else {
       setIsPinLocation(false);
     }
+  };
+
+  useEffect(() => {
+    getWeather();
   }, [selectedPlace]);
 
   return (
     <div className="container my-3">
       <div>
-        <div className="d-flex justify-content-between">
+        <div className="d-flex justify-content-between gap-3">
           <div className="d-flex gap-3">
             <h1>{`${location.name} - ${location.region}, ${location.country}`}</h1>
             <button className="btn" onClick={() => clickPinLocation()}>
               {isPinLocation ? (
-                <BsPinAngle style={{ width: "30px", height: "100%" }} />
-              ) : (
                 <BsPinAngleFill style={{ width: "30px", height: "100%" }} />
+              ) : (
+                <BsPinAngle style={{ width: "30px", height: "100%" }} />
               )}
             </button>
           </div>
