@@ -1,11 +1,14 @@
 import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import moment from "moment";
-import axios from "axios";
 
 import { BsSpeedometer2, BsTrash3, BsWind } from "react-icons/bs";
 
 import LocationContext from "../../Contexts/LocationContext";
-import { Link } from "react-router-dom";
+
+import handlers from "./PinnedLocation.handler";
+
+const { getCurrentWeather } = handlers;
 
 const PinnedLocation = () => {
   const { setSelectedPlace } = useContext(LocationContext);
@@ -17,16 +20,13 @@ const PinnedLocation = () => {
   const getWeathers = async () => {
     try {
       let savedLocation = JSON.parse(localStorage.getItem("location")) || [];
-      // API key default ini adalalh key personal yang hanya aktif sampai 12/Feb/2024, gunakan env variable untuk menggunakan env sendiri dengan menggunakan contoh .env.example
-      const apiKey = process.env.API_KEY || "0cf0fea2677b42f899690517242901";
 
       const weatherPromises = savedLocation.map(async (location) => {
         try {
-          const forecastUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
-          const response = await axios.get(forecastUrl);
-          return response.data; // You can modify this line as needed
+          const response = await getCurrentWeather(location)
+          return response.data;
         } catch (error) {
-          console.error(`Error fetching forecast for ${location}:`, error);
+          console.error(`Error fetching current weather for ${location}:`, error);
           return {}; // Handle the error as needed
         }
       });
@@ -88,7 +88,7 @@ const PinnedLocation = () => {
       {loading ? (
         <div
           className="d-flex align-items-center justify-content-center"
-          style={{ minHeight: "80vh" }}
+          style={{ minHeight: "65vh" }}
         >
           <div
             className="spinner-border"
@@ -101,7 +101,7 @@ const PinnedLocation = () => {
       ) : weathers.length === 0 ? (
         <div
           className="d-flex align-items-center justify-content-center flex-column"
-          style={{ minHeight: "80vh" }}
+          style={{ minHeight: "65vh" }}
         >
           <h1>No saved location</h1>
           <p>

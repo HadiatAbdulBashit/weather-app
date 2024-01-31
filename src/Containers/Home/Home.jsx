@@ -12,6 +12,10 @@ import { RiWaterPercentLine } from "react-icons/ri";
 
 import LocationContext from "../../Contexts/LocationContext";
 
+import handlers from "./Home.handler";
+
+const { getForecast } = handlers;
+
 const Home = () => {
   const { selectedPlace } = useContext(LocationContext);
 
@@ -24,13 +28,7 @@ const Home = () => {
 
   const getWeather = async () => {
     try {
-      // API key default ini adalalh key personal yang hanya aktif sampai 12/Feb/2024, gunakan env variable untuk menggunakan env sendiri dengan menggunakan contoh .env.example
-      const apiKey = process.env.API_KEY || "0cf0fea2677b42f899690517242901";
-      const forecastUrl = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${selectedPlace.value}&days=6`;
-
-      // Mengambil data ramalan cuaca saat ini dan 5 hari ke depan
-      const response = await axios.get(forecastUrl);
-
+      const response = await getForecast(selectedPlace.value);
       setForecast(response.data.forecast.forecastday);
       setCurrentWeather(response.data.current);
       setLocation(response.data.location);
@@ -83,7 +81,7 @@ const Home = () => {
       {loading ? (
         <div
           className="d-flex align-items-center justify-content-center"
-          style={{ minHeight: "80vh" }}
+          style={{ minHeight: "70vh" }}
         >
           <div
             className="spinner-border"
@@ -96,7 +94,7 @@ const Home = () => {
       ) : currentWeather === null ? (
         <div
           className="d-flex align-items-center justify-content-center"
-          style={{ minHeight: "80vh" }}
+          style={{ minHeight: "70vh" }}
         >
           <h1>Failed to connect to server</h1>
         </div>
