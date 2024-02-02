@@ -27,7 +27,7 @@ const PinnedLocation = () => {
           return response.data;
         } catch (error) {
           console.error(`Error fetching current weather for ${location}:`, error);
-          return {}; // Handle the error as needed
+          return null; // Handle the error as needed
         }
       });
 
@@ -107,6 +107,13 @@ const PinnedLocation = () => {
           <p>
             Pin location on <Link to={"/"}>Home Page</Link>
           </p>
+        </div>
+      ) : weathers[0] === null ? (
+        <div
+          className="d-flex align-items-center justify-content-center"
+          style={{ minHeight: "70vh" }}
+        >
+          <h1>Failed to connect to the server</h1>
         </div>
       ) : (
         <div className="my-3 g-3 row row-cols-1 row-cols-xl-2 justify-content-center">

@@ -12,7 +12,7 @@ const Footer = () => {
           width: '100%'
       }}
     >
-      <div className="container d-flex flex-wrap justify-content-between align-items-center">
+      <div className="container-md d-flex flex-wrap justify-content-between align-items-center">
         <div className="col-md-4 d-flex align-items-center">
           <a href="https://github.com/HadiatAbdulBashit/weather-app" className="text-decoration-none" target={'_blank'}>
           <span className="text-muted">© 2024 HAB</span>
