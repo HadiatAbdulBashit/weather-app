@@ -53,7 +53,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className="navbar navbar-expand-md"
+      className="navbar navbar-expand-md nav-tabs"
       style={{
         background:
           "linear-gradient(277deg, rgba(255,255,255,0.5) 0%, rgba(223,238,255,0.4) 100%)",
@@ -88,7 +88,7 @@ const Navbar = () => {
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
               <Link
-                className={"nav-link" + (url === "/" ? " active" : "")}
+                className={"nav-link ps-2" + (url === "/" ? " active" : "")}
                 to={"/"}
               >
                 Home
@@ -96,7 +96,7 @@ const Navbar = () => {
             </li>
             <li className="nav-item">
               <Link
-                className={"nav-link" + (url === "/pin" ? " active" : "")}
+                className={"nav-link ps-2" + (url === "/pin" ? " active" : "")}
                 to={"/pin"}
               >
                 Pin

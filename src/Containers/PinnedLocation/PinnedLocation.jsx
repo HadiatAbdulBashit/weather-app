@@ -48,6 +48,7 @@ const PinnedLocation = () => {
     let savedLocation = JSON.parse(localStorage.getItem("location")) || [];
     savedLocation = savedLocation.filter((e) => e !== location);
     localStorage.setItem("location", JSON.stringify(savedLocation));
+    setLoading(true);
     getWeathers();
   };
 

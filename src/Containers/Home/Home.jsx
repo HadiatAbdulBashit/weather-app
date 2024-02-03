@@ -25,6 +25,7 @@ const Home = () => {
   const [onCelcius, setOnCelcius] = useState(true);
   const [isPinLocation, setIsPinLocation] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showDays, setShowDays] = useState(true);
 
   const getWeather = async () => {
     try {
@@ -212,31 +213,102 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className="my-3 g-3 row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 justify-content-center">
-            {forecast.slice(1).map((day) => (
-              <div className="col" key={day.date}>
-                <div className="card text-center">
-                  <div className="card-header text-uppercase">
-                    {moment(day.date).format("dddd")}
-                  </div>
-                  <div className="card-body d-flex justify-content-center">
-                    <img
-                      src={currentWeather.condition?.icon}
-                      alt={currentWeather.condition?.text}
-                      width={"100px"}
-                    />
-                    <div className="text-muted d-flex justify-content-center flex-column me-3">
-                      <span>
-                        {onCelcius ? day.day.maxtemp_c : day.day.maxtemp_f}°
-                      </span>
-                      <span>
-                        {onCelcius ? day.day.mintemp_c : day.day.mintemp_f}°
-                      </span>
+          <div className="mt-3">
+            <ul
+              className="nav nav-tabs justify-content-center"
+              style={{ border: 0 }}
+            >
+              <li className="nav-item">
+                <button
+                  className={
+                    "nav-link text-black" + (showDays ? " active" : "")
+                  }
+                  onClick={() => setShowDays(true)}
+                >
+                  Days
+                </button>
+              </li>
+              <li className="nav-item">
+                <button
+                  className={
+                    "nav-link text-black" + (showDays ? "" : " active")
+                  }
+                  onClick={() => setShowDays(false)}
+                >
+                  Hours
+                </button>
+              </li>
+            </ul>
+            <div
+              style={{
+                border: "1px solid #ffffff50",
+                padding: "15px",
+                borderRadius: "15px",
+                backgroundColor: "#ffffff30",
+              }}
+            >
+              {showDays ? (
+                <div className="g-3 row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 justify-content-center">
+                  {forecast.slice(1).map((day) => (
+                    <div className="col" key={day.date}>
+                      <div className="card text-center">
+                        <div className="card-header text-uppercase">
+                          {moment(day.date).format("dddd")}
+                        </div>
+                        <div className="card-body d-flex justify-content-center">
+                          <img
+                            src={day.day.condition?.icon}
+                            alt={day.day.condition?.text}
+                            width={"100px"}
+                          />
+                          <div className="text-muted d-flex justify-content-center flex-column me-3">
+                            <span>
+                              {onCelcius
+                                ? day.day.maxtemp_c
+                                : day.day.maxtemp_f}
+                              °
+                            </span>
+                            <span>
+                              {onCelcius
+                                ? day.day.mintemp_c
+                                : day.day.mintemp_f}
+                              °
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              </div>
-            ))}
+              ) : (
+                <div className="g-3 row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 justify-content-center">
+                  {forecast[0].hour?.slice(moment().format("H")).map((hour) => (
+                    <div className="col" key={hour.time}>
+                      <div className="card text-center">
+                        <div className="card-header text-uppercase">
+                          {moment(hour.time).format("LT")}
+                        </div>
+                        <div className="card-body d-flex justify-content-center">
+                          <img
+                            src={hour.condition?.icon}
+                            alt={hour.condition?.text}
+                            width={"100px"}
+                          />
+                          <div className="text-muted d-flex justify-content-center flex-column me-3">
+                            <span>
+                              {onCelcius ? hour.temp_c : hour.temp_f}°
+                            </span>
+                            <span>
+                              {onCelcius ? hour.feelslike_c : hour.feelslike_f}°
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </>
       )}
