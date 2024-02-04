@@ -1,7 +1,8 @@
+// Module
 import { useContext, useEffect, useState } from "react";
 import moment from "moment";
-import axios from "axios";
 
+// Icons
 import {
   BsWind,
   BsSpeedometer2,
@@ -10,10 +11,16 @@ import {
 } from "react-icons/bs";
 import { RiWaterPercentLine } from "react-icons/ri";
 
+// Component
+import Loading from "../../Components/Loading";
+import FailApi from "../../Components/FailApi";
+
+// Context
 import LocationContext from "../../Contexts/LocationContext";
 
+// Handler
 import handlers from "./Home.handler";
-
+// Inisialize handlers
 const { getForecast } = handlers;
 
 const Home = () => {
@@ -80,25 +87,9 @@ const Home = () => {
   return (
     <div className="container my-3">
       {loading ? (
-        <div
-          className="d-flex align-items-center justify-content-center"
-          style={{ minHeight: "70vh" }}
-        >
-          <div
-            className="spinner-border"
-            style={{ width: "100px", height: "100px" }}
-            role="status"
-          >
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
+        <Loading />
       ) : currentWeather === null ? (
-        <div
-          className="d-flex align-items-center justify-content-center"
-          style={{ minHeight: "70vh" }}
-        >
-          <h1>Failed to connect to the server</h1>
-        </div>
+        <FailApi />
       ) : (
         <>
           <div>

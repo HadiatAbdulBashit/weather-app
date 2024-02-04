@@ -1,13 +1,21 @@
+// Module
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
 
+// Icons
 import { BsSpeedometer2, BsTrash3, BsWind } from "react-icons/bs";
 
+// Component
+import Loading from "../../Components/Loading";
+import FailApi from "../../Components/FailApi";
+
+// Context
 import LocationContext from "../../Contexts/LocationContext";
 
+// Handler
 import handlers from "./PinnedLocation.handler";
-
+// Inisialize handlers
 const { getCurrentWeather } = handlers;
 
 const PinnedLocation = () => {
@@ -23,10 +31,13 @@ const PinnedLocation = () => {
 
       const weatherPromises = savedLocation.map(async (location) => {
         try {
-          const response = await getCurrentWeather(location)
+          const response = await getCurrentWeather(location);
           return response.data;
         } catch (error) {
-          console.error(`Error fetching current weather for ${location}:`, error);
+          console.error(
+            `Error fetching current weather for ${location}:`,
+            error
+          );
           return null; // Handle the error as needed
         }
       });
@@ -87,18 +98,7 @@ const PinnedLocation = () => {
         </div>
       </div>
       {loading ? (
-        <div
-          className="d-flex align-items-center justify-content-center"
-          style={{ minHeight: "65vh" }}
-        >
-          <div
-            className="spinner-border"
-            style={{ width: "100px", height: "100px" }}
-            role="status"
-          >
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
+        <Loading />
       ) : weathers.length === 0 ? (
         <div
           className="d-flex align-items-center justify-content-center flex-column"
@@ -110,12 +110,7 @@ const PinnedLocation = () => {
           </p>
         </div>
       ) : weathers[0] === null ? (
-        <div
-          className="d-flex align-items-center justify-content-center"
-          style={{ minHeight: "70vh" }}
-        >
-          <h1>Failed to connect to the server</h1>
-        </div>
+        <FailApi />
       ) : (
         <div className="my-3 g-3 row row-cols-1 row-cols-xl-2 justify-content-center">
           {weathers.map((location, index) => (
