@@ -20,6 +20,8 @@ import LocationContext from "../../Contexts/LocationContext";
 
 // Handler
 import handlers from "./Home.handler";
+import DayCard from "../../Components/DayCard/DayCard";
+import HourCard from "../../Components/HourCard/HourCard";
 // Inisialize handlers
 const { getForecast } = handlers;
 
@@ -92,6 +94,7 @@ const Home = () => {
         <FailApi />
       ) : (
         <>
+          {/* Detail weather forecast right now */}
           <div>
             <div className="d-flex justify-content-between gap-3">
               <div className="d-flex gap-3">
@@ -204,6 +207,7 @@ const Home = () => {
               </div>
             </div>
           </div>
+          {/* Detail per day and per hour */}
           <div className="mt-3">
             <ul
               className="nav nav-tabs justify-content-center"
@@ -238,67 +242,27 @@ const Home = () => {
                 backgroundColor: "#ffffff30",
               }}
             >
-              {showDays ? (
-                <div className="g-3 row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 justify-content-center">
-                  {forecast.slice(1).map((day) => (
-                    <div className="col" key={day.date}>
-                      <div className="card text-center">
-                        <div className="card-header text-uppercase">
-                          {moment(day.date).format("dddd")}
-                        </div>
-                        <div className="card-body d-flex justify-content-center">
-                          <img
-                            src={day.day.condition?.icon}
-                            alt={day.day.condition?.text}
-                            width={"100px"}
-                          />
-                          <div className="text-muted d-flex justify-content-center flex-column me-3">
-                            <span>
-                              {onCelcius
-                                ? day.day.maxtemp_c
-                                : day.day.maxtemp_f}
-                              °
-                            </span>
-                            <span>
-                              {onCelcius
-                                ? day.day.mintemp_c
-                                : day.day.mintemp_f}
-                              °
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="g-3 row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 justify-content-center">
-                  {forecast[0].hour?.slice(moment().format("H")).map((hour) => (
-                    <div className="col" key={hour.time}>
-                      <div className="card text-center">
-                        <div className="card-header text-uppercase">
-                          {moment(hour.time).format("LT")}
-                        </div>
-                        <div className="card-body d-flex justify-content-center">
-                          <img
-                            src={hour.condition?.icon}
-                            alt={hour.condition?.text}
-                            width={"100px"}
-                          />
-                          <div className="text-muted d-flex justify-content-center flex-column me-3">
-                            <span>
-                              {onCelcius ? hour.temp_c : hour.temp_f}°
-                            </span>
-                            <span>
-                              {onCelcius ? hour.feelslike_c : hour.feelslike_f}°
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="g-3 row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 justify-content-center">
+                {showDays
+                  ? forecast
+                      .slice(1)
+                      .map((day) => (
+                        <DayCard
+                          day={day}
+                          onCelcius={onCelcius}
+                          key={day.date}
+                        />
+                      ))
+                  : forecast[0].hour
+                      ?.slice(moment().format("H"))
+                      .map((hour) => (
+                        <HourCard
+                          hour={hour}
+                          onCelcius={onCelcius}
+                          key={hour.time}
+                        />
+                      ))}
+              </div>
             </div>
           </div>
         </>

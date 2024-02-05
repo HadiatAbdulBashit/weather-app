@@ -1,9 +1,15 @@
+// Module
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Select from "react-select";
-import axios from "axios";
 
+// Context
 import LocationContext from "../../Contexts/LocationContext";
+
+// Handler
+import handlers from "./Navbar.handler";
+// Inisialize handlers
+const { getSuggestLocation } = handlers;
 
 const Navbar = () => {
   const { selectedPlace, setSelectedPlace } = useContext(LocationContext);
@@ -14,13 +20,7 @@ const Navbar = () => {
 
   const promiseOptions = async (searchKey) => {
     try {
-      // API key default ini adalalh key personal yang hanya aktif sampai 12/Feb/2024, gunakan env variable untuk menggunakan env sendiri dengan menggunakan contoh .env.example
-      const apiKey = process.env.API_KEY || "0cf0fea2677b42f899690517242901";
-      const response = await axios.get(
-        `https://api.weatherapi.com/v1/search.json?q=${
-          searchKey ? searchKey : "auto:ip"
-        }&key=${apiKey}`
-      );
+      const response = await getSuggestLocation(searchKey);
 
       const formattedOptions = response.data.map((location) => ({
         value: location.url,
